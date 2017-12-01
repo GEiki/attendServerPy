@@ -7,19 +7,17 @@ import json
 
 app = Flask(__name__)
 
-# def deserializer(info):
-#     d = request.get_data()
-#     data = json.loads(d)
-#     return data
 
 @app.route('/')
 def hello_world():
     pass
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         pass
+
 
 @app.route('/getuserinfo', methods=['GET', 'POST'])
 def getuserinfo():
@@ -33,12 +31,14 @@ def getuserinfo():
         except:
             return 'id not exits'
 
+
 @app.route('/insertuserinfo', methods=['GET', 'POST'])
 def insertuserinfo():
     if request.method == 'POST':
         d = request.get_data()
         data = json.loads(d)
         return SQLUtil.insertUserInfo(data)
+
 
 @app.route('/getinfo', methods=['GET', 'POST'])
 def getinfo():
@@ -52,6 +52,7 @@ def getinfo():
             dataformat = json.dumps(result)
             return jsonify(dataformat)
 
+
 @app.route('/getcourseinfo', methods=['GET', 'POST'])
 def getcourseinfo():
     if request.method == 'POST':
@@ -64,6 +65,7 @@ def getcourseinfo():
             dataformat = json.dumps(result)
             return jsonify(dataformat)
 
+
 @app.route('/getAttendanceInfo', method=['GET', 'POST'])
 def getattendanceinfo():
     if request.method == 'POST':
@@ -75,6 +77,7 @@ def getattendanceinfo():
         else:
             dataformat = json.dumps(result)
             return jsonify(dataformat)
+
 
 @app.route('/addattendanceinfo', method=['GET', 'POST'])
 def addattendanceinfo():
