@@ -37,7 +37,11 @@ def insertuserinfo():
     if request.method == 'POST':
         d = request.get_data()
         data = json.loads(d)
-        tmp = (data['id'], data['username'], data['password'], data['identity'], data['sex'], data['collegeOrClass'])
+        tmp = (data['id'], data['username'],
+               data['password'],
+               data['identity'],
+               data['sex'],
+               data['collegeOrClass'])
         return jsonify({'result': SQLUtil.insertUserInfo(tmp)})
 
 
@@ -50,9 +54,12 @@ def getinfo():
         if result == 0:
             return jsonify({'result': result})
         else:
-            dataformat = json.dumps(result)
-            info = {'id': dataformat[0], 'name': dataformat[1], 'sex': dataformat[2], 'classorcollege': dataformat[3]}
-            return jsonify({'list': info})
+            info = {'id': result[0],
+                    'name': result[1],
+                    'sex': result[2],
+                    'classorcollege': result[3]}
+            dataformat = json.dumps(info)
+            return jsonify({'list': dataformat})
 
 
 @app.route('/getcourseinfo', methods=['GET', 'POST'])
@@ -103,7 +110,12 @@ def addattendanceinfo():
     if request.method == 'POST':
         d = request.get_data()
         info = json.loads(d)
-        tmp = (info['id'], info['identity'], info['attend'], info['courseid'], info['coursename'], info['position'])
+        tmp = (info['id'],
+               info['identity'],
+               info['attend'],
+               info['courseid'],
+               info['coursename'],
+               info['position'])
         result = SQLUtil.addAttendanceInfo(tmp)
         return jsonify({'error': result})
 
