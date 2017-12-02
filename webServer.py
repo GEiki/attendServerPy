@@ -20,7 +20,13 @@ def getuserinfo():
         data = json.loads(d)
         result = SQLUtil.getUserinfo(data['userid'], data['password'])
         if result != 0 and result != 1:
-            dataformat = json.dumps(result)
+            tmp = {'id': result[0],
+                   'username': result[1],
+                   'password': result[2],
+                   'identity': result[3],
+                   'sex': result[4],
+                   'collegeOrClass': result[5]}
+            dataformat = json.dumps(tmp)
             return jsonify({'list': dataformat})
         else:
             return jsonify({'error': result})
@@ -86,6 +92,8 @@ def getattendanceinfo():
         else:
             if data['identity'] == '课程':
                 tmp = [{'id': x[0], 'name': x[1], 'attend': x[2], 'position': x[3]} for x in result]
+            else:
+                tmp = [{'course': x[0], 'attend':x[1]} for x in result]
             dataformat = json.dumps(tmp)
             return jsonify({'list': dataformat})
 
