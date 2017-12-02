@@ -31,7 +31,8 @@ def insertuserinfo():
     if request.method == 'POST':
         d = request.get_data()
         data = json.loads(d)
-        return jsonify({'list':SQLUtil.insertUserInfo(data)})
+        tmp = (data['id'], data['username'], data['password'], data['identity'], data['sex'], data['collegeOrClass'])
+        return jsonify({'result': SQLUtil.insertUserInfo(tmp)})
 
 
 @app.route('/getinfo', methods=['GET', 'POST'])
@@ -41,7 +42,7 @@ def getinfo():
         data = json.loads(d)
         result = SQLUtil.getInfo(data['id'], data['identity'])
         if result == 0:
-            return jsonify({'result':result})
+            return jsonify({'result': result})
         else:
             dataformat = json.dumps(result)
             info = {'id': dataformat[0], 'name': dataformat[1], 'sex': dataformat[2], 'classorcollege': dataformat[3]}
@@ -91,9 +92,11 @@ def getattendanceinfo():
 def addattendanceinfo():
     if request.method == 'POST':
         d = request.get_data()
-        data = json.loads(d)
-        return jsonify({'error': SQLUtil.addAttendanceInfo(data[0], data[1])})
+        info = json.loads(d)
+        tmp = (info['id'], info['identity'], info['attend'], info['courseid'], info['coursename'], info['position'])
+        result = SQLUtil.addAttendanceInfo(tmp)
+        return jsonify({'error': result})
 
 if __name__ == '__main__':
-    debug=True
+    debug = True
     app.run(host='0.0.0.0')
