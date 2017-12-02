@@ -84,7 +84,9 @@ def getattendanceinfo():
         if result == 0:
             return jsonify({'error': 0})
         else:
-            dataformat = json.dumps(result)
+            if data['identity'] == '课程':
+                tmp = [{'id': x[0], 'name': x[1], 'attend': x[2], 'position': x[3]} for x in result]
+            dataformat = json.dumps(tmp)
             return jsonify({'list': dataformat})
 
 
