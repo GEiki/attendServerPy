@@ -2,65 +2,66 @@
 import mysql.connector
 
 
-
 #获取用户信息
-def getUserinfo(userid,password):
+def getUserinfo(userid, password):
     conn = mysql.connector.connect(user='root', password='', database='attendancedb')
     curor = conn.cursor()
     curor.execute('select * from user where id=%s'%userid)
-    values=curor.fetchall()
-    if values==[]:
+    values = curor.fetchall()
+    if values == []:
         return -1
-    elif values[0][2]==password:
-        if(values[0][1]=='学生'):
+    elif values[0][2] == password:
+        if(values[0][1] == '学生'):
             curor.execute('select * from student where S_id=%s'%userid)
             values=curor.fetchall()
-            res=(values[0][0],values[0][1],'student',values[0][2],values[0][3])
+            res=(values[0][0], values[0][1], '学生', values[0][2], values[0][3])
             curor.close()
             return res
-        elif(values[0][1]=='教师'):
+        elif(values[0][1] == '教师'):
             curor.execute('select * from teacher where T_id=%s'%userid)
             values=curor.fetchall()
-            res=(values[0][0],values[0][1],'teacher',values[0][2],values[0][3])
+            res=(values[0][0], values[0][1], '教师', values[0][2], values[0][3])
             curor.close()
             return res
-    elif values[0][2]!=password:
+    elif values[0][2] != password:
         curor.close()
         return 0
+
 
 #插入用户信息
 def insertUserInfo(tuple):
     conn = mysql.connector.connect(user='root', password='', database='attendancedb')
     curor = conn.cursor()
-    id=tuple[0]
-    name=tuple[1]
-    psw=tuple[2]
-    identity=tuple[3]
-    sex=tuple[4]
-    collegeOrClass=tuple[5]
+    id = tuple[0]
+    name = tuple[1]
+    psw = tuple[2]
+    identity = tuple[3]
+    sex = tuple[4]
+    collegeOrClass = tuple[5]
     curor.execute('select * from user where id=%s'%id)
-    if curor.fetchall()!=[]:
+    if curor.fetchall() != []:
         curor.close()
         return 0
     else:
-        sql='insert into user values(%s,%s,%s)'
-        l=(id,identity,psw)
-        curor.execute(sql,l)
+        sql = 'insert into user values(%s,%s,%s)'
+        l = (id, identity, psw)
+        curor.execute(sql, l)
         conn.commit()
-        if identity=='学生':
-            sql='insert into student values(%s,%s,%s,%s)'
-            l=(id,name,sex,collegeOrClass)
+        if identity == '学生':
+            sql = 'insert into student values(%s,%s,%s,%s)'
+            l = (id, name, sex, collegeOrClass)
             curor.execute(sql, l)
             conn.commit()
             curor.close()
             return 1
-        elif identity=='教师':
+        elif identity == '教师':
             sql = 'insert into teacher values(%s,%s,%s,%s)'
             l = (id, name, sex, collegeOrClass)
             curor.execute(sql, l)
             conn.commit()
             curor.close()
             return 1
+
 
 #修改用户信息
 def updateUserInfo(tuple):
@@ -78,23 +79,23 @@ def updateUserInfo(tuple):
         curor.close()
         print('No such user')
         return 0
-    elif identity=='学生':
-        sql1='update student set S_name=%s,Sex=%s,Major_class=%s where S_id=%s'
-        sql2='update user set identity=%s,u_password=%s where id=%s'
-        l1=(name,sex,collegeOrClass,id)
-        l2=(identity,psw,id)
-        curor.execute(sql1,l1)
-        curor.execute(sql2,l2)
+    elif identity == '学生':
+        sql1 = 'update student set S_name=%s,Sex=%s,Major_class=%s where S_id=%s'
+        sql2 = 'update user set identity=%s,u_password=%s where id=%s'
+        l1 = (name, sex, collegeOrClass, id)
+        l2 = (identity, psw, id)
+        curor.execute(sql1, l1)
+        curor.execute(sql2, l2)
         conn.commit()
         curor.close()
         return 1
     elif identity=='教师':
-        sql1='update teacher set T_name=%s,Sex=%s,College=% where T_id=%s'
-        sql2='update user set identity=%s,u_password=%s where id=%s'
-        l1=(name,sex,collegeOrClass,id)
-        l2=(identity,psw,id)
-        curor.execute(sql1,l1)
-        curor.execute(sql2,l2)
+        sql1 = 'update teacher set T_name=%s,Sex=%s,College=% where T_id=%s'
+        sql2 = 'update user set identity=%s,u_password=%s where id=%s'
+        l1 = (name, sex, collegeOrClass, id)
+        l2 = (identity, psw, id)
+        curor.execute(sql1, l1)
+        curor.execute(sql2, l2)
         conn.commit()
         curor.close()
         return 1
@@ -105,8 +106,8 @@ def updateUserInfo(tuple):
 def getInfo(id,identity):
     conn = mysql.connector.connect(user='root', password='', database='attendancedb')
     curor = conn.cursor()
-    if identity=='学生':
-        sql='select * from student where S_id=%s'%id
+    if identity == '学生':
+        sql = 'select * from student where S_id=%s' % id
         curor.execute(sql)
         values=curor.fetchall()
         if values==[]:

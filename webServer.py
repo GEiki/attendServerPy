@@ -16,18 +16,16 @@ def hello_world():
 @app.route('/getuserinfo', methods=['GET', 'POST'])
 def getuserinfo():
     if request.method == 'POST':
-        d = request.get_data()
+        d = request.get_data().decode('utf-8')
         data = json.loads(d)
         result = SQLUtil.getUserinfo(data['userid'], data['password'])
         if result != 0 and result != 1:
-            tmp = {'id': result[0],
-                   'username': result[1],
-                   'password': result[2],
-                   'identity': result[3],
-                   'sex': result[4],
-                   'collegeOrClass': result[5]}
-            dataformat = json.dumps(tmp)
-            return jsonify({'list': dataformat})
+            tmp = [result[0],
+                   result[1],
+                   result[2],
+                   result[3],
+                   result[4]]
+            return jsonify({'list': tmp})
         else:
             return jsonify({'error': result})
 
@@ -35,8 +33,8 @@ def getuserinfo():
 @app.route('/insertuserinfo', methods=['GET', 'POST'])
 def insertuserinfo():
     if request.method == 'POST':
-        d = request.get_data()
-        data = json.loads(d)
+        d = request.get_data().decode('utf-8')
+        data = json.load(d)
         tmp = (data['id'], data['username'],
                data['password'],
                data['identity'],
@@ -48,7 +46,7 @@ def insertuserinfo():
 @app.route('/getinfo', methods=['GET', 'POST'])
 def getinfo():
     if request.method == 'POST':
-        d = request.get_data()
+        d = request.get_data().decode('utf-8')
         data = json.loads(d)
         result = SQLUtil.getInfo(data['id'], data['identity'])
         if result == 0:
@@ -65,7 +63,7 @@ def getinfo():
 @app.route('/getcourseinfo', methods=['GET', 'POST'])
 def getcourseinfo():
     if request.method == 'POST':
-        d = request.get_data()
+        d = request.get_data().decode('utf-8')
         data = json.loads(d)
         result = SQLUtil.getCourseInfo(data['id'], data['identity'])
         if result == 0:
@@ -75,23 +73,44 @@ def getcourseinfo():
             samedate = []
             finaldata = {}
             for x in result:
-                date.append(x[4].split())
+                date.append(x[4].strftime("%Y-%m-%d %H:%M:%S").split())
             for y in date:
                 if y[0] not in samedate:
                     samedate.append(y[0])
             for z in samedate:
                 finaldata[z] = []
                 for i in result:
-                    tmp = i[4].split()
+                    tmp = i[4].strftime("%Y-%m-%d %H:%M:%S").split()
                     if tmp[0] == z:
-                        finaldata[z].append(i)
+                        end = list(i)
+                        end[4] = "%s年%s月%s日 %s:%s:%s" % (i[4].year,
+                                                         i[4].month,
+                                                         i[4].day,
+                                                         i[4].hour,
+                                                         i[4].minute,
+                                                         i[4].second)
+                        finaldata[z].append(end)
             return jsonify({'list': finaldata})
 
 
-@app.route('/getAttendanceInfo', methods=['GET', 'POST'])
+@app.route('/updateuserinfo', methods=['GET', 'POST'])
+def updateuserinfo():
+    if request.method == 'POST':
+        d = request.get_data().decode('utf-8')
+        data = json.loads(d)
+        result = SQLUtil.updateUserInfo((data['id'],
+                                         data['username'],
+                                         data['password'],
+                                         data['identity'],
+                                         data['sex'],
+                                         data['collegeOrClass']))
+        return jsonify({'error': result})
+
+
+@app.route('/getattendanceinfo', methods=['GET', 'POST'])
 def getattendanceinfo():
     if request.method == 'POST':
-        d = request.get_data()
+        d = request.get_data().decode('utf-8')
         data = json.loads(d)
         result = SQLUtil.getAttendanceInfo(data['id'], data['identity'])
         if result == 0:
@@ -101,16 +120,16 @@ def getattendanceinfo():
                 tmp = [{'id': x[0], 'name': x[1], 'attend': x[2], 'position': x[3]} for x in result]
             else:
                 tmp = [{'course': x[0], 'attend':x[1]} for x in result]
-            dataformat = json.dumps(tmp)
-            return jsonify({'list': dataformat})
+            return jsonify({'list': tmp})
 
 
 @app.route('/addattendanceinfo', methods=['GET', 'POST'])
 def addattendanceinfo():
     if request.method == 'POST':
-        d = request.get_data()
+        d = request.get_data().decode('utf-8')
         info = json.loads(d)
         tmp = (info['id'],
+               info['name'],
                info['identity'],
                info['attend'],
                info['courseid'],
