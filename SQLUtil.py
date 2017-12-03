@@ -1,8 +1,7 @@
-
 import mysql.connector
 
 
-#获取用户信息
+# 获取用户信息
 def getUserinfo(userid, password):
     conn = mysql.connector.connect(user='root', password='', database='attendancedb')
     curor = conn.cursor()
@@ -28,7 +27,7 @@ def getUserinfo(userid, password):
         return 0
 
 
-#插入用户信息
+# 插入用户信息
 def insertUserInfo(tuple):
     conn = mysql.connector.connect(user='root', password='', database='attendancedb')
     curor = conn.cursor()
@@ -63,7 +62,7 @@ def insertUserInfo(tuple):
             return 1
 
 
-#修改用户信息
+# 修改用户信息
 def updateUserInfo(tuple):
     conn = mysql.connector.connect(user='root', password='', database='attendancedb')
     curor = conn.cursor()
@@ -102,7 +101,8 @@ def updateUserInfo(tuple):
     else:
         return 0
 
-#获取教师和学生信息
+
+# 获取教师和学生信息
 def getInfo(id,identity):
     conn = mysql.connector.connect(user='root', password='', database='attendancedb')
     curor = conn.cursor()
@@ -135,7 +135,8 @@ def getInfo(id,identity):
             curor.close()
             return (id,name,sex,c)
 
-#获取考勤情况
+
+# 获取考勤情况
 def getAttendanceInfo(id,identity):
     conn = mysql.connector.connect(user='root', password='', database='attendancedb')
     curor = conn.cursor()
@@ -167,7 +168,8 @@ def getAttendanceInfo(id,identity):
             curor.close()
             return res
 
-#添加考勤情况
+
+# 添加考勤情况
 def addAttendanceInfo(info):
     if len(info)!=7:
         return -2
@@ -180,7 +182,7 @@ def addAttendanceInfo(info):
     curor.close()
     return 1
 
-#获取课程信息或课表
+# 获取课程信息或课表
 def getCourseInfo(id,identity):
     conn = mysql.connector.connect(user='root', password='', database='attendancedb')
     curor = conn.cursor()

@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    return 'Attend'
+    return 'attendServer'
 
 
 @app.route('/getuserinfo', methods=['GET', 'POST'])
@@ -34,7 +34,7 @@ def getuserinfo():
 def insertuserinfo():
     if request.method == 'POST':
         d = request.get_data().decode('utf-8')
-        data = json.load(d)
+        data = json.loads(d)
         tmp = (data['id'], data['username'],
                data['password'],
                data['identity'],
